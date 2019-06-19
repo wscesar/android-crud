@@ -1,16 +1,14 @@
 <resources>
-    <string name="app_name">Baby Needs</string>
+    <string name="app_name">SQL CRUD APP</string>
     <string name="action_settings">Settings</string>
     <string name="add_item">Add Item</string>
-    <string name="enter_item">Enter Item</string>
-    <string name="hint_item">Enter Item</string>
-    <string name="hint_qty">Quantity</string>
-    <string name="hint_color">Color</string>
-    <string name="hint_size">Size</string>
-    <string name="save_button">Save</string>
-    <string name="sure_text">Are you sure?</string>
-    <string name="no_text">no</string>
-    <string name="yes_text">yes</string>
-    <string name="edit_time">Edit Item</string>
-    <string name="update_text">Update</string>
+    <string name="enter_item">Add Item</string>
+    <string name="hint_item">Nome</string>
+    <string name="hint_qty">Quantidade</string>
+    <string name="save_button">Salvar</string>
+    <string name="sure_text">Tem certeza?</string>
+    <string name="no_text">Não</string>
+    <string name="yes_text">Sim</string>
+    <string name="edit_time">Editar Item</string>
+    <string name="update_text">Atualizar</string>
 </resources>

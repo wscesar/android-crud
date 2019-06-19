@@ -1,4 +1,4 @@
-package com.bawp.babyneeds.ui;
+package com.wscesar.crud;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bawp.babyneeds.R;
-import com.bawp.babyneeds.data.DatabaseHandler;
-import com.bawp.babyneeds.model.Item;
+import com.wscesar.crud.data.DatabaseHandler;
+import com.wscesar.crud.model.Item;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -37,19 +37,16 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_row, viewGroup, false);
-
         return new ViewHolder(view, context);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder viewHolder, int position) {
-
         Item item = itemList.get(position); // object Item
 
         viewHolder.itemName.setText(MessageFormat.format("Item: {0}", item.getItemName()));
         viewHolder.quantity.setText(MessageFormat.format("Qtd: {0}", String.valueOf(item.getItemQuantity())));
         viewHolder.dateAdded.setText(MessageFormat.format("Editado em: {0}", item.getDateItemAdded()));
-
     }
 
     @Override
@@ -90,12 +87,12 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
             Item item = itemList.get(position);
 
             switch (v.getId()) {
-            case R.id.editButton:
-                editItem(item);
+                case R.id.editButton:
+                    editItem(item);
                 break;
 
-            case R.id.deleteButton:
-                deleteItem(item.getId());
+                case R.id.deleteButton:
+                    deleteItem(item.getId());
                 break;
             }
 
@@ -142,18 +139,18 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
             final View view = inflater.inflate(R.layout.popup, null);
 
             Button saveButton;
-            final EditText babyItem;
+            final EditText itemName;
             final EditText itemQuantity;
             TextView title;
 
-            babyItem = view.findViewById(R.id.babyItem);
+            itemName = view.findViewById(R.id.itemName);
             itemQuantity = view.findViewById(R.id.itemQuantity);
             saveButton = view.findViewById(R.id.saveButton);
             saveButton.setText(R.string.update_text);
             title = view.findViewById(R.id.title);
 
             title.setText(R.string.edit_time);
-            babyItem.setText(newItem.getItemName());
+            itemName.setText(newItem.getItemName());
             itemQuantity.setText(String.valueOf(newItem.getItemQuantity()));
 
             builder.setView(view);
@@ -163,21 +160,20 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                // update our item
-                DatabaseHandler databaseHandler = new DatabaseHandler(context);
+                    DatabaseHandler databaseHandler = new DatabaseHandler(context);
 
-                // update items
-                newItem.setItemName(babyItem.getText().toString());
-                newItem.setItemQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                    // update items
+                    newItem.setItemName(itemName.getText().toString());
+                    newItem.setItemQuantity(Integer.parseInt(itemQuantity.getText().toString()));
 
-                if (!babyItem.getText().toString().isEmpty() && !itemQuantity.getText().toString().isEmpty()) {
-                    databaseHandler.updateItem(newItem);
-                    notifyItemChanged(getAdapterPosition(), newItem); // important!
-                } else {
-                    Snackbar.make(view, "Fields Empty", Snackbar.LENGTH_SHORT).show();
-                }
+                    if (!itemName.getText().toString().isEmpty() && !itemQuantity.getText().toString().isEmpty()) {
+                        databaseHandler.updateItem(newItem);
+                        notifyItemChanged(getAdapterPosition(), newItem); // important!
+                    } else {
+                        Snackbar.make(view, "Fields Empty", Snackbar.LENGTH_SHORT).show();
+                    }
 
-                dialog.dismiss();
+                    dialog.dismiss();
 
                 }
             });

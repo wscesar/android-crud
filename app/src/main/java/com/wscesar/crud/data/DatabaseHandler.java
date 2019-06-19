@@ -1,4 +1,4 @@
-package com.bawp.babyneeds.data;
+package com.wscesar.crud.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,8 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.bawp.babyneeds.model.Item;
-import com.bawp.babyneeds.util.Constants;
+import com.wscesar.crud.model.Item;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -39,14 +38,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + " INTEGER," + AMOUNT + " INTEGER," + DATE_ADDED + " LONG);";
 
         db.execSQL(CREATE_BABY_TABLE);
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-
         onCreate(db);
     }
 
@@ -92,7 +88,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<Item> getAllItems() {
-
         SQLiteDatabase db = this.getReadableDatabase();
 
         List<Item> itemList = new ArrayList<>();

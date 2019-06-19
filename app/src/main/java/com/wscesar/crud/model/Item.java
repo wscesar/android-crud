@@ -1,4 +1,4 @@
-package com.bawp.babyneeds.model;
+package com.wscesar.crud.model;
 
 public class Item {
     private int id;
