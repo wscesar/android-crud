@@ -11,6 +11,7 @@ import android.util.Log;
 import com.wscesar.crud.model.Item;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,14 +19,14 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private final Context context;
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 5;
     public static final String DB_NAME = "mydb";
-    public static final String TABLE_NAME = "tbl_items";
+    public static final String TABLE_NAME = "tbl_products";
 
-    public static final String ID = "id";
-    public static final String ITEM = "item";
-    public static final String AMOUNT = "amount";
-    public static final String DATE_ADDED = "date_added";
+    public static final String COL_ID = "id";
+    public static final String COL_PRODUCT = "product";
+    public static final String COL_PRICE = "price";
+    public static final String COL_DATE_ADDED = "date_added";
 
     public DatabaseHandler(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -34,10 +35,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_BABY_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + ID + " INTEGER PRIMARY KEY," + ITEM
-                + " INTEGER," + AMOUNT + " INTEGER," + DATE_ADDED + " LONG);";
+        String sql =
+                "CREATE TABLE " + TABLE_NAME + "("
+                + COL_ID + " INTEGER PRIMARY KEY,"
+                + COL_PRODUCT + " TEXT,"
+                + COL_PRICE + " FLOAT,"
+                + COL_DATE_ADDED + " LONG);";
 
-        db.execSQL(CREATE_BABY_TABLE);
+        db.execSQL(sql);
     }
 
     @Override
@@ -51,40 +56,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ITEM, item.getItemName());
-        values.put(AMOUNT, item.getItemQuantity());
-        values.put(DATE_ADDED, java.lang.System.currentTimeMillis());// timestamp of the system
+        values.put(COL_PRODUCT, item.getItemName());
+        values.put(COL_PRICE, item.getPrice());
+        values.put(COL_DATE_ADDED, java.lang.System.currentTimeMillis());// timestamp of the system
 
         // Inset the row
         db.insert(TABLE_NAME, null, values);
         Log.d("DBHandler", "added Item: ");
-    }
-
-    public Item getItem(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_NAME, new String[] { ID, ITEM, AMOUNT, DATE_ADDED }, ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
-
-        if (cursor != null)
-            cursor.moveToFirst();
-
-        Item item = new Item();
-        if (cursor != null) {
-            item.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(ID))));
-            item.setItemName(cursor.getString(cursor.getColumnIndex(ITEM)));
-            item.setItemQuantity(cursor.getInt(cursor.getColumnIndex(AMOUNT)));
-
-            // convert Timestamp to something readable
-            DateFormat dateFormat = DateFormat.getDateInstance();
-            String formattedDate = dateFormat
-                    .format(new Date(cursor.getLong(cursor.getColumnIndex(DATE_ADDED))).getTime()); // Feb 23, 2020
-
-            item.setDateItemAdded(formattedDate);
-
-        }
-
-        return item;
     }
 
     public List<Item> getAllItems() {
@@ -92,22 +70,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         List<Item> itemList = new ArrayList<>();
 
-        Cursor cursor = db.query(TABLE_NAME, new String[] { ID, ITEM, AMOUNT, DATE_ADDED }, null, null, null, null,
-                DATE_ADDED + " DESC");
+        String[] columns = new String[] { COL_ID, COL_PRODUCT, COL_PRICE, COL_DATE_ADDED };
+
+        Cursor cursor = db.query(
+                            TABLE_NAME, columns,
+                            null, null, null, null,
+                            COL_DATE_ADDED + " DESC");
 
         if (cursor.moveToFirst()) {
             do {
-
                 Item item = new Item();
-                item.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(ID))));
-                item.setItemName(cursor.getString(cursor.getColumnIndex(ITEM)));
-                item.setItemQuantity(cursor.getInt(cursor.getColumnIndex(AMOUNT)));
+                item.setId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
+                item.setItemName(cursor.getString(cursor.getColumnIndex(COL_PRODUCT)));
+                item.setPrice(cursor.getFloat(cursor.getColumnIndex(COL_PRICE)));
 
                 // convert Timestamp to something readable
                 DateFormat dateFormat = DateFormat.getDateInstance();
-                String formattedDate = dateFormat
-                        .format(new Date(cursor.getLong(cursor.getColumnIndex(DATE_ADDED))).getTime()); // Feb 23, 2020
+                String formattedDate =
+                    dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndex(COL_DATE_ADDED))).getTime()); // Feb 23, 2020
                 item.setDateItemAdded(formattedDate);
+
+                NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+                String formattedNumber =
+                    numberFormat.format(cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
+                    item.setCurrency(formattedNumber);
 
                 // Add to arraylist
                 itemList.add(item);
@@ -123,20 +109,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ITEM, item.getItemName());
-        values.put(AMOUNT, item.getItemQuantity());
-        values.put(DATE_ADDED, java.lang.System.currentTimeMillis()); // timestamp of the system
+        values.put(COL_PRODUCT, item.getItemName());
+        values.put(COL_PRICE, item.getPrice());
+        values.put(COL_DATE_ADDED, java.lang.System.currentTimeMillis()); // timestamp of the system
 
-        return db.update(TABLE_NAME, values, ID + "=?", new String[] { String.valueOf(item.getId()) });
+        return db.update(TABLE_NAME, values, COL_ID + "=?", new String[] { String.valueOf(item.getId()) });
 
     }
 
     public void deleteItem(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, ID + "=?", new String[] { String.valueOf(id) });
+        db.delete(TABLE_NAME, COL_ID + "=?", new String[] { String.valueOf(id) });
         db.close();
     }
 
+    /*
     public int getItemsCount() {
         String countQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -144,4 +131,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
+
+    public Item getItem(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] columns = new String[] { COL_ID, COL_ITEM, COL_PRICE, COL_DATE_ADDED };
+
+        Cursor cursor = db.query(TABLE_NAME, columns, COL_ID + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Item item = new Item();
+        if (cursor != null) {
+            item.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COL_ID))));
+            item.setItemName(cursor.getString(cursor.getColumnIndex(COL_ITEM)));
+            item.setItemQuantity(cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
+
+            // convert Timestamp to something readable
+            DateFormat dateFormat = DateFormat.getDateInstance();
+            String formattedDate = dateFormat
+                    .format(new Date(cursor.getLong(cursor.getColumnIndex(COL_DATE_ADDED))).getTime()); // Feb 23, 2020
+
+            item.setDateItemAdded(formattedDate);
+
+        }
+
+        return item;
+    }
+    */
 }

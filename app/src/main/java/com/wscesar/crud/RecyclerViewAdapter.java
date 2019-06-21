@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bawp.babyneeds.R;
+import com.bawp.crud.R;
 import com.wscesar.crud.data.DatabaseHandler;
 import com.wscesar.crud.model.Item;
 
@@ -42,11 +42,20 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder viewHolder, int position) {
-        Item item = itemList.get(position); // object Item
+        // object Item
+        Item item = itemList.get(position);
 
-        viewHolder.itemName.setText(MessageFormat.format("Item: {0}", item.getItemName()));
-        viewHolder.quantity.setText(MessageFormat.format("Qtd: {0}", String.valueOf(item.getItemQuantity())));
-        viewHolder.dateAdded.setText(MessageFormat.format("Editado em: {0}", item.getDateItemAdded()));
+        viewHolder.itemName.setText(
+                MessageFormat.format("{0}", item.getItemName())
+        );
+
+        viewHolder.quantity.setText(
+                MessageFormat.format("Preço: {0}", item.getCurrency())
+        );
+
+        viewHolder.dateAdded.setText(
+                MessageFormat.format("{0}", item.getDateItemAdded())
+        );
     }
 
     @Override
@@ -123,6 +132,7 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
                     dialog.dismiss();
                 }
             });
+
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -136,24 +146,24 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
 
             builder = new AlertDialog.Builder(context);
             inflater = LayoutInflater.from(context);
-            final View view = inflater.inflate(R.layout.popup, null);
+            final View v = inflater.inflate(R.layout.popup, null);
 
             Button saveButton;
             final EditText itemName;
             final EditText itemQuantity;
             TextView title;
 
-            itemName = view.findViewById(R.id.itemName);
-            itemQuantity = view.findViewById(R.id.itemQuantity);
-            saveButton = view.findViewById(R.id.saveButton);
+            itemName = v.findViewById(R.id.itemName);
+            itemQuantity = v.findViewById(R.id.itemQuantity);
+            saveButton = v.findViewById(R.id.saveButton);
             saveButton.setText(R.string.update_text);
-            title = view.findViewById(R.id.title);
+            title = v.findViewById(R.id.title);
 
             title.setText(R.string.edit_time);
             itemName.setText(newItem.getItemName());
             itemQuantity.setText(String.valueOf(newItem.getItemQuantity()));
 
-            builder.setView(view);
+            builder.setView(v);
             dialog = builder.create();
             dialog.show();
 
@@ -170,7 +180,7 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
                         databaseHandler.updateItem(newItem);
                         notifyItemChanged(getAdapterPosition(), newItem); // important!
                     } else {
-                        Snackbar.make(view, "Fields Empty", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(v, "Fields Empty", Snackbar.LENGTH_SHORT).show();
                     }
 
                     dialog.dismiss();

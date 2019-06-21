@@ -4,9 +4,9 @@
     <string name="add_item">Add Item</string>
     <string name="enter_item">Add Item</string>
     <string name="hint_item">Nome</string>
-    <string name="hint_qty">Quantidade</string>
+    <string name="hint_price">Preço</string>
     <string name="save_button">Salvar</string>
-    <string name="sure_text">Tem certeza?</string>
+    <string name="sure_text">Deseja Excluir?</string>
     <string name="no_text">Não</string>
     <string name="yes_text">Sim</string>
     <string name="edit_time">Editar Item</string>

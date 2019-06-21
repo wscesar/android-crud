@@ -38,7 +38,7 @@
                 android:layout_below="@id/itemName"
                 android:inputType="number"
                 android:layout_width="match_parent"
-                android:hint="@string/hint_qty"
+                android:hint="@string/hint_price"
                 android:layout_height="wrap_content" />
 
             <Button
