@@ -13,48 +13,48 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bawp.crud.R;
 import com.wscesar.crud.data.DatabaseHandler;
-import com.wscesar.crud.model.Item;
+import com.wscesar.crud.model.Product;
 
 import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
-public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder> {
+public class ProductList extends Adapter<ProductList.ViewHolder> {
 
     private Context context;
-    private List<Item> itemList;
+    private List<Product> itemList;
     private AlertDialog.Builder builder;
     private AlertDialog dialog;
     private LayoutInflater inflater;
 
-    public RecyclerViewAdapter(Context context, List<Item> itemList) {
+    public ProductList(Context context, List<Product> itemList) {
         this.context = context;
         this.itemList = itemList;
     }
 
     @NonNull
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_row, viewGroup, false);
+    public ProductList.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.product_list_item, viewGroup, false);
         return new ViewHolder(view, context);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder viewHolder, int position) {
-        // object Item
-        Item item = itemList.get(position);
+    public void onBindViewHolder(@NonNull ProductList.ViewHolder viewHolder, int position) {
 
-        viewHolder.itemName.setText(
+        Product item = itemList.get(position);
+
+        viewHolder.labelName.setText(
                 MessageFormat.format("{0}", item.getItemName())
         );
 
-        viewHolder.quantity.setText(
+        viewHolder.labelPrice.setText(
                 MessageFormat.format("Preço: {0}", item.getCurrency())
         );
 
-        viewHolder.dateAdded.setText(
-                MessageFormat.format("{0}", item.getDateItemAdded())
+        viewHolder.labelDate.setText(
+                MessageFormat.format("Adicionado em {0}", item.getDateItemAdded())
         );
     }
 
@@ -64,21 +64,21 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView itemName;
-        public TextView quantity;
-        public TextView dateAdded;
+        public TextView labelName;
+        public TextView labelPrice;
+        public TextView labelDate;
         public Button editButton;
         public Button deleteButton;
 
-        public int id;
+        //public int id;
 
         public ViewHolder(@NonNull View itemView, Context ctx) {
             super(itemView);
             context = ctx;
 
-            itemName = itemView.findViewById(R.id.item_name);
-            quantity = itemView.findViewById(R.id.item_quantity);
-            dateAdded = itemView.findViewById(R.id.item_date);
+            labelName = itemView.findViewById(R.id.listItemName);
+            labelPrice = itemView.findViewById(R.id.listItemPrice);
+            labelDate = itemView.findViewById(R.id.listItemDate);
 
             editButton = itemView.findViewById(R.id.editButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
@@ -93,7 +93,7 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
 
             int position;
             position = getAdapterPosition();
-            Item item = itemList.get(position);
+            Product item = itemList.get(position);
 
             switch (v.getId()) {
                 case R.id.editButton:
@@ -112,7 +112,7 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
             builder = new AlertDialog.Builder(context);
 
             inflater = LayoutInflater.from(context);
-            View view = inflater.inflate(R.layout.confirmation_pop, null);
+            View view = inflater.inflate(R.layout.delete_modal, null);
 
             Button noButton = view.findViewById(R.id.conf_no_button);
             Button yesButton = view.findViewById(R.id.conf_yes_button);
@@ -142,51 +142,58 @@ public class RecyclerViewAdapter extends Adapter<RecyclerViewAdapter.ViewHolder>
 
         }
 
-        private void editItem(final Item newItem) {
+        private void editItem(final Product newItem) {
 
             builder = new AlertDialog.Builder(context);
             inflater = LayoutInflater.from(context);
-            final View v = inflater.inflate(R.layout.popup, null);
+            final View v = inflater.inflate(R.layout.update_modal, null);
 
             Button saveButton;
-            final EditText itemName;
-            final EditText itemQuantity;
-            TextView title;
+            final EditText inputName;
+            final EditText inputPrice;
 
-            itemName = v.findViewById(R.id.itemName);
-            itemQuantity = v.findViewById(R.id.itemQuantity);
-            saveButton = v.findViewById(R.id.saveButton);
-            saveButton.setText(R.string.update_text);
-            title = v.findViewById(R.id.title);
+            inputName = v.findViewById(R.id.popProduct);
+            inputName.setText(newItem.getItemName());
 
-            title.setText(R.string.edit_time);
-            itemName.setText(newItem.getItemName());
-            itemQuantity.setText(String.valueOf(newItem.getItemQuantity()));
+            inputPrice = v.findViewById(R.id.popPrice);
+            inputPrice.setText(String.valueOf(newItem.getPrice()));
 
             builder.setView(v);
             dialog = builder.create();
             dialog.show();
 
+            saveButton = v.findViewById(R.id.popButton);
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DatabaseHandler databaseHandler = new DatabaseHandler(context);
 
                     // update items
-                    newItem.setItemName(itemName.getText().toString());
-                    newItem.setItemQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                    newItem.setItemName(inputName.getText().toString());
+                    newItem.setPrice(Float.parseFloat(inputPrice.getText().toString()));
 
-                    if (!itemName.getText().toString().isEmpty() && !itemQuantity.getText().toString().isEmpty()) {
+                    NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+                    String currencyPrice =
+                            numberFormat.format(Float.parseFloat(inputPrice.getText().toString()));
+                    newItem.setCurrency(currencyPrice);
+
+                    if (!inputName.getText().toString().isEmpty() && !inputPrice.getText().toString().isEmpty()) {
+
                         databaseHandler.updateItem(newItem);
-                        notifyItemChanged(getAdapterPosition(), newItem); // important!
+                        notifyItemChanged(getAdapterPosition(), newItem); // update item on the view
+
                     } else {
-                        Snackbar.make(v, "Fields Empty", Snackbar.LENGTH_SHORT).show();
+
+                        Snackbar.make(v, "Preencha todos os campos", Snackbar.LENGTH_SHORT).show();
+
                     }
 
                     dialog.dismiss();
 
                 }
+
             });
+
         }
 
     }

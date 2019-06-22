@@ -1,14 +1,13 @@
 <resources>
-    <string name="app_name">SQL CRUD APP</string>
-    <string name="action_settings">Settings</string>
-    <string name="add_item">Add Item</string>
-    <string name="enter_item">Add Item</string>
-    <string name="hint_item">Nome</string>
+    <string name="app_name">Shopping List 1.0</string>
+    <string name="hint_item">Produto</string>
     <string name="hint_price">Preço</string>
-    <string name="save_button">Salvar</string>
-    <string name="sure_text">Deseja Excluir?</string>
+    <string name="hint_date">Adicionado em: XX/XX/XXXX</string>
+    <string name="add_text">Adicionar</string>
+    <string name="delete_text">Deseja Excluir?</string>
     <string name="no_text">Não</string>
     <string name="yes_text">Sim</string>
-    <string name="edit_time">Editar Item</string>
+    <string name="edit_text">Editar</string>
     <string name="update_text">Atualizar</string>
+    <string name="action_settings">Settings</string>
 </resources>

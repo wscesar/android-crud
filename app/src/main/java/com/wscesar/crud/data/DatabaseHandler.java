@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.wscesar.crud.model.Item;
+import com.wscesar.crud.model.Product;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    private final Context context;
+
     public static final int DB_VERSION = 5;
     public static final String DB_NAME = "mydb";
     public static final String TABLE_NAME = "tbl_products";
@@ -27,6 +27,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COL_PRODUCT = "product";
     public static final String COL_PRICE = "price";
     public static final String COL_DATE_ADDED = "date_added";
+
+    private final Context context;
 
     public DatabaseHandler(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -52,7 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // CRUD operations
-    public void addItem(Item item) {
+    public void addItem(Product item) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -65,10 +67,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Log.d("DBHandler", "added Item: ");
     }
 
-    public List<Item> getAllItems() {
+    public List<Product> getAllItems() {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        List<Item> itemList = new ArrayList<>();
+        List<Product> itemList = new ArrayList<>();
 
         String[] columns = new String[] { COL_ID, COL_PRODUCT, COL_PRICE, COL_DATE_ADDED };
 
@@ -79,23 +81,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Item item = new Item();
+                Product item = new Product();
                 item.setId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
                 item.setItemName(cursor.getString(cursor.getColumnIndex(COL_PRODUCT)));
                 item.setPrice(cursor.getFloat(cursor.getColumnIndex(COL_PRICE)));
 
-                // convert Timestamp to something readable
+                // Convert Timestamp
                 DateFormat dateFormat = DateFormat.getDateInstance();
                 String formattedDate =
-                    dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndex(COL_DATE_ADDED))).getTime()); // Feb 23, 2020
+                        dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndex(COL_DATE_ADDED))).getTime()); // Feb 23, 2020
                 item.setDateItemAdded(formattedDate);
 
+                // Convert Price to Currency
                 NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-                String formattedNumber =
-                    numberFormat.format(cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
-                    item.setCurrency(formattedNumber);
+                String currencyPrice =
+                        numberFormat.format(cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
+                item.setCurrency(currencyPrice);
 
-                // Add to arraylist
+                // Add Item to Array
                 itemList.add(item);
 
             } while (cursor.moveToNext());
@@ -105,7 +108,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public int updateItem(Item item) {
+    public int updateItem(Product item) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();

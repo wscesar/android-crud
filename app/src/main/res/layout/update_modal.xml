@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/update_modal"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/popProduct"
+            android:hint="@string/hint_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/popPrice"
+            android:hint="@string/hint_price"
+            android:layout_below="@id/popProduct"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/popButton"
+            android:layout_below="@id/popPrice"
+            android:layout_marginEnd="5dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:text="@string/update_text"
+            android:layout_width="match_parent"
+            android:textColor="@android:color/white"
+            android:background="@color/colorAccent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+
+

@@ -12,9 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.bawp.crud.R;
 import com.wscesar.crud.data.DatabaseHandler;
-import com.wscesar.crud.model.Item;
+import com.wscesar.crud.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     public EditText itemName;
     public EditText itemPrice;
 
-    private RecyclerViewAdapter recyclerViewAdapter;
-    private List<Item> itemList;
+    private ProductList recyclerViewAdapter;
+    private List<Product> itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,22 +35,22 @@ public class MainActivity extends AppCompatActivity {
 
         databaseHandler = new DatabaseHandler(this);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView productList = findViewById(R.id.productList);
+        productList.setHasFixedSize(true);
+        productList.setLayoutManager(new LinearLayoutManager(this));
 
         itemList = new ArrayList<>();
         itemList = databaseHandler.getAllItems();
 
-        recyclerViewAdapter = new RecyclerViewAdapter(this, itemList);
+        recyclerViewAdapter = new ProductList(this, itemList);
 
-        recyclerView.setAdapter(recyclerViewAdapter);
+        productList.setAdapter(recyclerViewAdapter);
         recyclerViewAdapter.notifyDataSetChanged();
 
-        itemName = findViewById(R.id.productName);
-        itemPrice = findViewById(R.id.productPrice);
+        itemName = findViewById(R.id.mainProduct);
+        itemPrice = findViewById(R.id.mainPrice);
 
-        saveButton = findViewById(R.id.saveButton);
+        saveButton = findViewById(R.id.mainButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveItem(View v) {
-        Item item = new Item();
+        Product item = new Product();
 
         String newItem = itemName.getText().toString().trim();
         Float newPrice = Float.parseFloat(itemPrice.getText().toString().trim());

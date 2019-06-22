@@ -1,14 +1,14 @@
 package com.wscesar.crud.model;
 
-public class Item {
+public class Product {
     private int id;
     private String itemName;
-    private int itemQuantity;
+    //private int itemQuantity;
     private Float price;
     private String dateItemAdded;
     private String currency;
 
-    public Item() {
+    public Product() {
     }
 
 
@@ -48,15 +48,6 @@ public class Item {
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
-
-    public int getItemQuantity() {
-        return itemQuantity;
-    }
-
-    public void setItemQuantity(int itemQuantity) {
-        this.itemQuantity = itemQuantity;
-    }
-
 
     public Float getPrice() {
         return price;

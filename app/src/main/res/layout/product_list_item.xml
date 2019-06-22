@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:layout_marginBottom="15dp" >
+
+    <TextView
+        android:id="@+id/listItemName"
+        android:text="@string/hint_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/listItemPrice"
+        android:layout_below="@+id/listItemName"
+        android:text="@string/hint_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/listItemDate"
+        android:layout_below="@+id/listItemPrice"
+        android:text="@string/hint_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp" />
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/listItemPrice"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="15dp"
+            android:background="@android:drawable/ic_menu_edit" />
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:drawable/ic_delete" />
+
+    </TableRow>
+
+</RelativeLayout>

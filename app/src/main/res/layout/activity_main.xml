@@ -10,33 +10,33 @@
     android:id="@+id/linearLayout"
     tools:context="com.wscesar.crud.MainActivity" >
 
-        <EditText
-            android:id="@+id/productName"
-            android:inputType="textFilter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_item" />
+    <EditText
+        android:id="@+id/mainProduct"
+        android:inputType="textNoSuggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_item" />
 
-        <EditText
-            android:id="@+id/productPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_price"
-            android:inputType="numberDecimal" />
+    <EditText
+        android:id="@+id/mainPrice"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_price"/>
 
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:background="@color/colorAccent"
-            android:text="@string/enter_item"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+    <Button
+        android:id="@+id/mainButton"
+        android:text="@string/add_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
+        android:id="@+id/productList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -49,6 +49,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintVertical_bias="0.0" />
-
 
 </LinearLayout>
